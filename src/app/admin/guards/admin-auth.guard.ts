@@ -12,12 +12,5 @@ export const adminAuthGuard: CanActivateFn = async () => {
     return false;
   }
 
-  // Check if user has admin role in users table
-  const profile = await supabase.getUser(user.id);
-  if (!profile || profile.role !== 'admin') {
-    router.navigate(['/admin/login']);
-    return false;
-  }
-
   return true;
 };
