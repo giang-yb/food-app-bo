@@ -1,0 +1,85 @@
+<div class="space-y-6">
+  <div class="flex items-center gap-4">
+    <button (click)="goBack()" class="p-2 rounded-lg hover:bg-gray-100">
+      <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+    </button>
+    <h1 class="text-2xl font-bold text-gray-900">Chi tiết sản phẩm</h1>
+  </div>
+
+  <app-spinner *ngIf="loading()" label="overlay"></app-spinner>
+
+  <ng-container *ngIf="!loading() && product()">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <!-- Image & Basic Info -->
+      <app-card>
+        <div class="space-y-4">
+          <div class="aspect-square rounded-xl overflow-hidden bg-gray-100">
+            <img *ngIf="product()!.image_url" [src]="product()!.image_url" [alt]="product()!.name"
+              class="w-full h-full object-cover">
+            <div *ngIf="!product()!.image_url" class="w-full h-full flex items-center justify-center">
+              <svg class="w-16 h-16 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <h2 class="text-xl font-bold text-gray-900">{{ product()!.name }}</h2>
+            <p class="text-gray-500 mt-1">{{ category()?.name || 'Không có danh mục' }}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <app-badge [variant]="product()!.is_available ? 'success' : 'danger'" [showDot]="true">
+              {{ product()!.is_available ? 'Còn hàng' : 'Hết hàng' }}
+            </app-badge>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Details -->
+      <app-card title="Thông tin chi tiết">
+        <div class="space-y-4">
+          <div>
+            <p class="text-sm text-gray-500">Giá bán</p>
+            <p class="text-lg font-semibold text-gray-900">{{ formatCurrency(product()!.price) }}</p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-500">Mô tả</p>
+            <p class="text-gray-700">{{ product()!.description || 'Không có mô tả' }}</p>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <p class="text-sm text-gray-500">Ngày tạo</p>
+              <p class="text-sm text-gray-900">{{ product()!.created_at | date:'dd/MM/yyyy HH:mm' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-500">Cập nhật lần cuối</p>
+              <p class="text-sm text-gray-900">{{ product()!.updated_at | date:'dd/MM/yyyy HH:mm' }}</p>
+            </div>
+          </div>
+          <div class="flex gap-3 pt-4">
+            <a [routerLink]="['/admin/products/edit', product()!.id]"
+              class="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
+              Sửa sản phẩm
+            </a>
+          </div>
+        </div>
+      </app-card>
+    </div>
+
+    <!-- Reviews -->
+    <app-card title="Đánh giá">
+      <div class="space-y-4">
+        <div *ngFor="let review of reviews()" class="border-b border-gray-100 pb-4 last:border-0">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="font-medium text-gray-900">{{ review.user_name || 'Khách hàng' }}</span>
+            <span class="text-yellow-500">{{ '★'.repeat(review.rating) }}{{ '☆'.repeat(5 - review.rating) }}</span>
+          </div>
+          <p class="text-gray-600 text-sm">{{ review.comment || 'Không có bình luận' }}</p>
+          <p class="text-gray-400 text-xs mt-1">{{ review.created_at | date:'dd/MM/yyyy' }}</p>
+        </div>
+        <p *ngIf="reviews().length === 0" class="text-gray-500 text-center py-4">Chưa có đánh giá nào</p>
+      </div>
+    </app-card>
+  </ng-container>
+</div>

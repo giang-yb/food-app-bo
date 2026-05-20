@@ -1,0 +1,7 @@
+{
+  "tool_name": "Read",
+  "tool_input_preview": "{\"file_path\":\"d:\\\\Mine\\\\bo-food-web\\\\bo-food-web\\\\postcss.config.js\"}",
+  "error": "File does not exist. Note: your current working directory is D:\\Mine\\bo-food-web\\bo-food-web.",
+  "timestamp": "2026-05-20T13:51:07.242Z",
+  "retry_count": 1
+}
